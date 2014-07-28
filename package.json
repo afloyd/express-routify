@@ -1,0 +1,27 @@
+{
+	"name": "express-routify",
+	"version": "0.0.1",
+	"keywords": ["express", "routify", "routing", "automatic", "route", "folder", "directory"],
+	"homepage": "https://github.com/afloyd/express-routify",
+	"bugs": {"url": "https://github.com/afloyd/express-routify/issues"},
+	"license": "MIT",
+	"author": {
+		"name": "Austin Floyd",
+		"email": "texsc98@gmail.com"
+	},
+	"private": false,
+	"description": "Automagik mapping of routes for express. Uses folder structure to build routes. Also automatically works with parameterized routes by adding '_' before the parameter name as the directory name where it should mount",
+	"repository" : {
+		"type" : "git",
+		"url" : "https://github.com/afloyd/express-routify"
+	},
+	"peerDependencies": {
+		"express": "~4.2.0"
+	},
+	"dependencies": {
+		"file-magik": "0.2.0"
+	},
+	"engines": {
+		"node": ">=0.10.29"
+	}
+}
