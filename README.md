@@ -16,22 +16,29 @@ Automagik mapping of routes for express (v4). Uses folder structure to build rou
 
 ##Description
 With the given file structure above (and the routes below) you would get the following:
-GET     /
-GET     /routes
-GET     /user
-POST    /user
-POST    /user/:userId
-DELETE  /user/:userId
-GET     /user/:userId/profilePhoto  
+```
+  GET     /
+  GET     /routes
+  GET     /user
+  POST    /user
+  POST    /user/:userId
+  DELETE  /user/:userId
+  GET     /user/:userId/profilePhoto  
+```
+
 Note `/user/:userId/profilePhoto` is camel cased but file name is not, this is default behavior. If you wish to preserve the original naming style, pass in the option `convertDashedNames: false` when instantiating express-routify
+
 
 There's a little bonus if you return some data from your route handlers. It all gets mapped to an object with your given route folder hierarchy. In my example, I returned the verb types with their respective url and data (if necessary, for example body or query params). This object that is built from the routing is passed back out from the initial express-routify file. Since I returned the verbs and route paths, I can then easily expose via a /routes path all avaialable routing paths... Useful for mapping an API!
 
 Another cool feature is being able to pass data like a constructor into your routing files! When instantiating express-routify, the `routeOpts` object is passed into every route file. The exports signature for the routing file should look something like:
+
 `module.exports = function (router, mountPath, opts) {...}`
+
 `router`: The express.Router() object with the app mounting path already specific. You can add further sub-routing from here if you desire... Although there's no need when using this module ;)
 
 `mountPath`: This is the (relative) path the router was mounted to on the app
+
 `opts`: This is a customizeable param paseed in through the `routeOpts` during initialization. If `routeOpts` is an array then it will be passed into the router through function.apply. So if you prefer to have named arguments you can use that style.
 
 
@@ -173,3 +180,27 @@ module.exports = function (router, mountPath, opts) {
 	};
 };
 ```
+
+#####License:
+
+The MIT License (MIT)
+
+Copyright (c) 2014 Austin Floyd (texsc98@gmail.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
