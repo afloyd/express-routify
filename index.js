@@ -42,9 +42,10 @@ function routify(app, mountPath, routePathMap, opts, routeObj) {
             routeSuffix = name.toLowerCase() === 'index' ? '' : name,
             router = express.Router(),
             routePath = mountPath + '/' + routeSuffix;
+		routePath = routePath.replace(/\/\//gi, '/');
         if (!Array.isArray(opts.routeOpts)) {
             routeObj[name] = fileExports(router, routePath, opts.routeOpts);
-            app.use(mountPath + '/' + routeSuffix, router);
+            app.use(routePath, router);
             continue;
         }
 
