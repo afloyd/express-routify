@@ -29,7 +29,24 @@ With the given file structure above (and the routes below) you would get the fol
 Note `/user/:userId/profilePhoto` is camel cased but file name is not, this is default behavior. If you wish to preserve the original naming style, pass in the option `convertDashedNames: false` when instantiating express-routify
 
 
-There's a little bonus if you return some data from your route handlers. It all gets mapped to an object with your given route folder hierarchy. In my example, I returned the verb types with their respective url and data (if necessary, for example body or query params). This object that is built from the routing is passed back out from the initial express-routify file. Since I returned the verbs and route paths, I can then easily expose via a /routes path all avaialable routing paths... Useful for mapping an API!
+There's another little bonus to using this module... It will automatically analyze/return your routes and verbs used! In addition, if you attach any properties to your route function, then they will be included. For example, if you want your route definition to let users know it accepts `firstname`, `lastName`, and `email` simple do something like:
+ ```
+ module.exports = function (router, mountPath, opts) {
+ 	router.route('/')
+ 		.get(getUser);
+ };
+ function getUser(req, res, next) {
+    res.json({photoUrl: '/photo/userId-' + res.locals.userId + '.jpg'});
+ })
+ getUser.prototype.body = {
+    email: 'String',
+    firstName: 'String',
+    lastName: 'String'
+ };
+ ```
+Now you can then easily expose via a /routes path all available routing paths... Useful for super simple mapping of an API!
+
+
 
 Another cool feature is being able to pass data like a constructor into your routing files! When instantiating express-routify, the `routeOpts` object is passed into every route file. The exports signature for the routing file should look something like:
 
@@ -41,6 +58,21 @@ Another cool feature is being able to pass data like a constructor into your rou
 
 `opts`: This is a customizeable param paseed in through the `routeOpts` during initialization. If `routeOpts` is an array then it will be passed into the router through function.apply. So if you prefer to have named arguments you can use that style.
 
+
+###Options
+```
+.routesPath				{String}	The routes directory (default: 'routes')
+
+.recursive				{Boolean}	Recurse through entire routes directory (default: true)
+
+.routeOpts				{Object}	Data to pass to route handler. If array will use function.apply to "spread" arguments (default: {})
+.mountPath				{String}	The root path to mount the routes. Useful for multi-applications, or APIs (default: '/')
+
+.sortRoutes				{Boolean)	Whether to "sort" the returned routes, or keep original order. Note, object key ordering isn't guaranteed even when sorting due to the nature of JavaScript Objects
+.getRoutes				{Boolean}	Whether or not to perform route inspection/return (default: true)
+
+.convertDashedNames		{Boolean}	Convert dashed route handler names to camelCase for routing (default: true)
+```
 
 ###Notes
 This module does not use any "expensive" method (like creating errors to analyze stack trace) for determining file structure, it just progressivly appends more folder names as it digs deeper into the hierarchy... And no hackery of private methods of express, just using the native express API with `express.Router()` All that just to say it works pretty fast!
@@ -79,10 +111,6 @@ module.exports = function (router, mountPath, opts) {
 		.get(function(req, res) {
 			res.render('index', { title: 'Express' });
 	});
-
-	return {
-		get: {url: mountPath}
-	};
 };
 ```
 ####\routes\routes.js
@@ -93,12 +121,6 @@ module.exports = function (router, mountPath, opts) {
 			console.log('routes', require('util').inspect(opts.lib.routes, 0, null, true));
 			res.json({routes: opts.lib.routes});
 		});
-
-	return {
-		get: {
-			url: mountPath
-		}
-	};
 };
 ```
 ####\user\index.js
@@ -118,19 +140,6 @@ module.exports = function (router, mountPath, opts) {
 				email: req.body.email
 			});
 		});
-
-	return {
-		get: {
-			url: mountPath
-		},
-		post: {
-			usl: mountPath,
-			body: {
-				name: 'foo',
-				email: 'foo@bar.com'
-			}
-		}
-	};
 };
 ```
 ####\user\_user\index.js
@@ -150,19 +159,6 @@ module.exports = function (router, mountPath, opts) {
 				email: req.body.email
 			});
 		});
-
-	return {
-		get: {
-			url: mountPath
-		},
-		post: {
-			usl: mountPath,
-			body: {
-				name: 'foo',
-				email: 'foo@bar.com'
-			}
-		}
-	};
 };
 ```
 ####\user\_user\profile-photo
@@ -172,12 +168,6 @@ module.exports = function (router, mountPath, opts) {
 		.get(function (req, res, next) {
 			res.json({photoUrl: '/photo/userId-' + res.locals.userId + '.jpg'});
 		})
-
-	return {
-		get: {
-			url: mountPath
-		}
-	};
 };
 ```
 
