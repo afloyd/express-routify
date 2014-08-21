@@ -41,7 +41,7 @@ var expressRoutify = module.exports = function expressRoutify(app, opts) {
 
 function routify(app, mountPath, routePathMap, opts, routeObj) {
 	var routeNames = Object.keys(routePathMap);
-	for (var i= routeNames.length;i--;) {
+	for (var i = 0, iLen = routeNames.length;i < iLen; i++) {
 		var name = routeNames[i],
 			propertyValue = routePathMap[name];
 
