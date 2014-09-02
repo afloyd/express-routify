@@ -40,8 +40,14 @@ var expressRoutify = module.exports = function expressRoutify(app, opts) {
 };
 
 function routify(app, mountPath, routePathMap, opts, routeObj) {
-	var routeNames = Object.keys(routePathMap);
-	for (var i = 0, iLen = routeNames.length;i < iLen; i++) {
+	// Sort to make sure `_` names get processed last. Otherwise route params could get confused with "higher level"
+	// 		routes in same folder. Object.keys doesn't necessarily return items "in order".
+	// TODO: Make order of params configuration option?
+	var routeNames = Object.keys(routePathMap).sort(function (a, b) {
+		if (a[0] === '_') { return 1; }
+		return 0;
+	});
+	for (var i = 0, iLen = routeNames.length; i < iLen; i++) {
 		var name = routeNames[i],
 			propertyValue = routePathMap[name];
 
@@ -58,7 +64,7 @@ function routify(app, mountPath, routePathMap, opts, routeObj) {
 
 		var fileExports = require(propertyValue),
 			routeSuffix = name.toLowerCase() === 'index' ? '' : name,
-			router = express.Router(),
+			router = express.Router({ mergeParams: true }),
 			routePath = mountPath + '/' + routeSuffix;
 		routePath = routePath.replace(/\/\//gi, '/');
 		if (!Array.isArray(opts.routeOpts)) {

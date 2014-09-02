@@ -1,6 +1,6 @@
 {
 	"name": "express-routify",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"keywords": ["express", "routify", "routing", "automatic", "route", "folder", "directory"],
 	"homepage": "https://github.com/afloyd/express-routify",
 	"bugs": {"url": "https://github.com/afloyd/express-routify/issues"},
@@ -16,7 +16,7 @@
 		"url" : "https://github.com/afloyd/express-routify"
 	},
 	"peerDependencies": {
-		"express": "~4.2.0"
+		"express": "4.8.x"
 	},
 	"dependencies": {
 		"file-magik": "0.2.0"
