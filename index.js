@@ -44,6 +44,9 @@ function routify(app, mountPath, routePathMap, opts, routeObj) {
 	// 		routes in same folder. Object.keys doesn't necessarily return items "in order".
 	// TODO: Make order of params configuration option?
 	var routeNames = Object.keys(routePathMap).sort(function (a, b) {
+		if (a.match(/index/)) return 1;
+		return 0;
+	}).sort(function (a, b) {
 		if (a[0] === '_') { return 1; }
 		return 0;
 	});
